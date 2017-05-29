@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+	<meta charset="UTF-8">
+	<title>My Slots</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}"><link>
+	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/myslots.css}"><link>
+	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/header.css}"><link>
+</head>
+<body>
+	<div th:replace="fragments/header :: header">to be replaced</div>
+	<h1><span th:text="${user.firstName}"></span>'s slots</h1>
+	
+	<th:block th:each="schedule : ${schedules}">
+		<div class="weekDiv">
+			<div class="location">
+				<a th:href="@{'/schedules/' + ${schedule.id} + '/edit'}"><span th:text="${schedule.location}"></span></a>
+			</div>
+
+			<th:block th:each="day : ${schedule.week}">
+				<div class="dayDiv">
+					<div class="weekDay">
+						<span th:text="${day.weekday}"></span>
+					</div>
+					<th:block th:each="timeSlot : ${day.timeSlots}">
+						<div class="slotDiv">
+							<div class="time">
+								<span th:text="${timeSlot.startTime}"></span>
+							</div>
+							<div>-</div>
+							<div class="time">
+								<span th:text="${timeSlot.endTime}"></span>
+							</div>
+							<div class="publishers">
+								<th:block th:each="publisher : ${timeSlot.publishers}">
+									<div th:if="${publisher.id != user.id}">
+										<div class="publisher"><span th:text="${publisher.firstName}"></span> <span th:text="${publisher.lastName}"></span></div>
+									</div>
+								</th:block>
+							</div>
+							<div class="deleteDiv" th:id="@{'ts-' + ${timeSlot.id} + '-' + ${user.id}}">
+								<img src="http://localhost:8080/PPublica/resources/DELETEBUtton.png" >
+							</div>
+						</div>
+					</th:block>
+				
+				</div>
+			
+			</th:block>
+		
+		</div>
+		<div class="addSlot" th:id="${schedule.id}">
+			<img src="http://localhost:8080/PPublica/resources/PLUS.png">
+		</div>
+	</th:block>
+	
+		<script type="text/javascript" th:src="@{/resources/js/myslots.js}"></script>
+	
+</body>
+</html>

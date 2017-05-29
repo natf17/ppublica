@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Logging Out</title>
+</head>
+<body>
+	<script type="text/javascript">
+	console.log("attempting to log out:");
+	console.log(document.cookie);
+	document.cookie = 'access_token' + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT';
+	
+	window.location.href="/PPublica/";
+	</script>
+</body>
+</html>

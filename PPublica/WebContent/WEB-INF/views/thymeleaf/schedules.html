@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+	<meta charset="UTF-8">
+	<title>Publishers</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}"><link>
+	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/getSchedules.css}"><link>
+	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/header.css}"><link>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: header">to be replaced</div>
+	<a href="/PPublica/schedules/add">Add a schedule</a>
+	
+	
+	<th:block th:each="week : ${weeks}">
+		<div class="weekDiv">
+			<div class="id">
+				<span th:text="${week.id}"></span> 
+			</div>
+			
+			<div class="location">
+				<span th:text="${week.location}"></span> 
+			</div>
+		<div class="edit">
+			<a th:href="@{'/schedules/' + ${week.id} + '/edit'}">Edit</a>
+		</div>
+		<div class="deleteDiv">
+				<img src="http://localhost:8080/PPublica/resources/DELETEBUtton.png" >
+			</div>
+		
+		</div>
+	
+	</th:block>
+	<script type="text/javascript" th:src="@{/resources/js/getSchedules.js}"></script>
+</body>
+</html>

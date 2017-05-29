@@ -1,0 +1,37 @@
+div.weekDiv {
+	margin: 2em;
+	background-color:HoneyDew;
+	padding: 1em;
+	border-width: 0.3em;
+	border-color:HoneyDew;
+	border-style:solid;
+	
+}
+
+div.weekDiv:hover {
+	border-color:orange;
+}
+
+div.weekDiv > * {
+	display:inline-block;
+	padding-right: 1em;
+}
+
+div.id {
+	width:10%;
+}
+
+div.location {
+	width:60%;
+}
+
+div.editDiv {
+	width: 5%;
+}
+div.deleteDiv {
+	width:5%;
+}
+img {
+	width: 15px;
+	height:15px;
+}

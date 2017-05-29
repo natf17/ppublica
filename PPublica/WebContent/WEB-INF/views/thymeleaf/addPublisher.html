@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+	  
+<head>
+	<meta charset="UTF-8">
+	<title>New Publisher</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/addPublishers.css}"><link>
+	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}"><link>
+	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/header.css}"><link>
+	
+</head>
+<body>
+	<div th:replace="fragments/header :: header">to be replaced</div>
+	<div class = "divPublisherForm">
+			<form id="newPublisher">
+				<div class="row">
+					<span>First name: </span><span><input type="text" id="firstNameInput" name="firstName"></span>
+				</div>
+				<div class="row">
+					<span>Last name: </span><span><input type="text" id="lastNameInput" name="lastName"></span>
+				</div>
+				<div class="row">
+					<span>Username: </span><span><input type="text" id="usernameInput" name="username"></span>
+				</div>
+			</form>
+			<div class="buttonDiv">
+					<button class= "buttonSubmit" type="button" name="button">Create</button>
+				</div>
+		</div>
+		
+		<script type="text/javascript" th:src="@{/resources/js/addPublisher.js}"></script>
+		<script type="text/javascript">
+			addPublisher("/PPublica/api/publisher", "http://localhost:8080/PPublica/publishers");
+		</script>
+</body>
+</html>

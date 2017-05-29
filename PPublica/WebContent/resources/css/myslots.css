@@ -1,0 +1,92 @@
+div.slotDiv {
+	margin: 2em;
+	background-color:HoneyDew;
+	padding-left: 1em;
+	padding-bottom: 1em;
+	padding-top: 1em;
+	padding-right:0.3em;
+	border-width: 0.3em;
+	border-color:HoneyDew;
+	border-style:solid;
+	
+}
+
+div.slotDiv:hover {
+	border-color:orange;
+}
+
+div.slotDiv > * {
+	display:inline-block;
+	padding-right: 1em;
+}
+
+div.id {
+	width:10%;
+}
+
+div.location {
+	font-size: 1.7em;
+	color: purple;
+	 width: 50%;
+  margin: 0 auto;
+  text-align:center;
+}
+
+div.location > a {
+	text-decoration:none;
+}
+
+div.editDiv {
+	width: 5%;
+}
+div.deleteDiv {
+	width:5%;
+	margin-left:10%;
+	float:right;
+}
+div.deleteDiv > img {
+	width:25px;
+	height:25px;
+}
+
+div.time {
+	width:20%;
+	color:purple;
+	text-align:center;
+}
+
+div.publishers {
+	width:20%;
+	color:pruple;
+	text-align:left;
+	font-size: 0.7em;
+}
+
+
+div.weekDiv {
+	background-color:AliceBlue;
+	padding:1%;
+}
+
+div.dayDiv {
+	margin:1em;
+}
+
+div.weekDay {
+	margin-top:2em;
+	margin-left:1em;
+}
+
+div.slotDiv >* {
+	vertical-align:middle;
+}
+
+div.addSlot > img {
+	width:30px;
+	height:30px;
+}
+
+div.addSlot {
+	margin-bottom:10%;
+	text-align:center;
+}

@@ -1,0 +1,85 @@
+table {
+   	width: 100%;
+   	border-collapse: collapse;
+   	border-left-color:transparent; 
+   	border-bottom-color:black; 
+
+}
+
+.divTable {
+	display:  table;
+	width:100%;
+    background-color:#eee;
+    padding-bottom: 0.6em;
+    /*border:1px solid  #666666; */
+    /*-spacing:5px;/*cellspacing:poor IE support for  this*/
+    /* border-collapse:separate;*/
+}
+
+.divRow {
+	display:table-row;
+	width:auto;
+}
+
+.divCell {
+	float:left;/*fix for  buggy browsers*/
+	display:table-column;
+	width:200px;
+	background-color:#ccc;
+	height:50px;
+}
+
+.headRow {
+	display:table-row;
+}
+
+td,th {
+	height: 50px;
+	position: relative;
+	border-bottom-color:brown;
+}
+
+div.data1 {
+	display:inline-table;
+	height:100%;
+	margin:0px;
+	vertical-align: middle;
+}
+		
+div.data2 {
+	display:inline-block;
+	height:100%;
+	margin:0px;
+}
+
+div.data3{
+	display:inline-block;
+	height:100%;
+	margin:0px;
+}
+       
+div.data {
+	display:table-cell;
+	text-align:center;
+	vertical-align:middle;
+	color:white;
+}
+
+div.timeCell {
+	vertical-align:bottom;
+	text-align:right;
+	border-bottom-color:transparent;
+	display: table-cell;
+	height:50px;
+	top:0.6em;
+	position:relative;
+	width:10%;
+	padding-right:10px;
+}
+		
+div.headerCell {
+	display: table-cell;
+	height:50px;
+	vertical-align:bottom;
+	text-align:center;
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+	<meta charset="UTF-8">
+	<title>PPublica</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}"><link>
+	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/header.css}"><link>
+</head>
+<body>
+	<div th:replace="fragments/header :: header">to be replaced</div>
+	<h1>Schedules</h1>
+	<a th:href="@{/}">HOME</a>
+	<div sec:authorize="isAuthenticated()">
+		<a th:href="@{/myslots}"><span sec:authentication="principal.username"></span>'s slots</a>
+		<div class = "divLogoutButton">
+		</div>
+	</div>
+		
+	<div sec:authorize="!isAuthenticated()">
+		<a th:href="@{/login}">Log IN</a>
+	</div>
+
+	<div th:with="userId=${#authentication.principal}">
+		<span th:text="${userId}"></span>
+		<span th:if="${userId == 'anonymousUser'}" th:text="Guest"></span>
+	</div>
+    
+    <a th:href="@{/69thst}">69thST</a>	
+    		
+</body>
+</html>
