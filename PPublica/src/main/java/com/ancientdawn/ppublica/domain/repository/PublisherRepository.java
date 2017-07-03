@@ -4,6 +4,8 @@ import com.ancientdawn.ppublica.domain.Assignment;
 import com.ancientdawn.ppublica.domain.AssignmentsPublisher;
 import com.ancientdawn.ppublica.domain.ProfilePublisher;
 import com.ancientdawn.ppublica.domain.Publisher;
+
+import java.time.LocalTime;
 import java.util.Set;
 
 public interface PublisherRepository {
@@ -22,6 +24,7 @@ public interface PublisherRepository {
 	void modifyAssignment(Long oldTimeSlotId, Long oldPublisherId, Long timeSlotId, Long publisherId);
 	void deleteAssignment(Long timeSlotId, Long publisherId);
 	void createAssignment(Long timeSlotId, Long publisherId);
+	void createAssignment(Long dayId, LocalTime startTime, Long publisherId);
 	Assignment getAssignment(Long timeSlotId, Long publisherId);
 	boolean existsAssignment(Long timeSlotId, Long publisherId);
 }

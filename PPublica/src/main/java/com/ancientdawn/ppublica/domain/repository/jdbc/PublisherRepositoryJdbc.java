@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,16 +22,23 @@ import org.springframework.stereotype.Repository;
 
 import com.ancientdawn.ppublica.domain.Assignment;
 import com.ancientdawn.ppublica.domain.AssignmentsPublisher;
+import com.ancientdawn.ppublica.domain.Day;
 import com.ancientdawn.ppublica.domain.ProfilePublisher;
 import com.ancientdawn.ppublica.domain.Publisher;
 import com.ancientdawn.ppublica.domain.TimeSlot;
+import com.ancientdawn.ppublica.domain.repository.DayRepository;
 import com.ancientdawn.ppublica.domain.repository.PublisherRepository;
 import com.ancientdawn.ppublica.domain.repository.TimeSlotRepository;
+import com.ancientdawn.ppublica.util.ModifiedAssignment;
 
 @Repository
 public class PublisherRepositoryJdbc implements PublisherRepository {
 	@Autowired
 	private TimeSlotRepository timeSlotRepository;
+	
+	@Autowired
+	private DayRepository dayRepository;
+	
 	private JdbcOperations jdbcOperations;
 	private static final String SQL_INSERT_PUBLISHER = "INSERT INTO publisher (firstName, lastName, username) VALUES (?, ?, ?)";
 	private static final String SQL_INSERT_PROFILE_PUBLISHER = "INSERT INTO publisher (firstName, lastName, username, password) VALUES (?, ?, ?, ?)";
@@ -424,6 +433,28 @@ public class PublisherRepositoryJdbc implements PublisherRepository {
 	@Override
 	public void createAssignment(Long timeSlotId, Long publisherId) {
 		jdbcOperations.update(SQL_INSERT_ASSIGNMENT, timeSlotId, publisherId);
+		
+	}
+	
+	// used when a timeSlot must be created
+	@Override
+	public void createAssignment(Long dayId, LocalTime startTime, Long publisherId) {
+		// Build a timeSlot object
+		
+		Day day = dayRepository.readDayProps(dayId);
+		TimeSlot tsNew = new TimeSlot();
+		Publisher publisher = new Publisher();
+		publisher.setId(publisherId);
+		LocalTime endTime = startTime.plus(day.getDuration());
+		
+		
+		tsNew.setDayId(dayId);
+		tsNew.setMaxPublishers(day.getDefaultMaxPublishers());
+		tsNew.setPublishers(new HashSet<Publisher>(Arrays.asList(publisher)));
+		tsNew.setStartTime(startTime);
+		tsNew.setEndTime(endTime);
+		
+		timeSlotRepository.createTimeSlot(tsNew);
 		
 	}
 

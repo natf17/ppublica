@@ -1,5 +1,8 @@
 package com.ancientdawn.ppublica.config;
 
+import java.text.SimpleDateFormat;
+import java.util.List;
+
 import javax.sql.DataSource;
 
 import org.springframework.context.ApplicationContext;
@@ -10,7 +13,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -29,6 +35,8 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
+import com.ancientdawn.ppublica.web.PpublicaExceptionHandler;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
@@ -110,10 +118,33 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 	}
 	
 	@Override
+	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+		Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
+		//builder.indentOutput(true).dateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+		ObjectMapper mapper = builder.build();
+		mapper.setSerializationInclusion(Include.NON_NULL);
+		converters.add(new MappingJackson2HttpMessageConverter(mapper));
+
+	}
+	
+	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/resources/**")
 				.addResourceLocations("/resources/");
 	}
+	
+	/*
+	@Override
+    public void configureMessageConverters(
+      List<HttpMessageConverter<?>> converters) {
+     
+		converters.add(createXmlHttpMessageConverter());
+ 
+        super.configureMessageConverters(converters);
+    }
+    
+    */
+
 	
 	@Override
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {

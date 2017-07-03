@@ -54,7 +54,7 @@ public class TimeSlot implements Comparable<TimeSlot>{
 	
 	public void setDayId(Long dayId) {
 		this.dayId = dayId;
-		System.out.println(dayId);
+		System.out.println("set dayId " + dayId);
 
 	}
 	
@@ -64,7 +64,7 @@ public class TimeSlot implements Comparable<TimeSlot>{
 	
 	public void setStartTime(LocalTime startTime) {
 		this.startTime = startTime;
-		System.out.println(startTime);
+		System.out.println("set starTime " + startTime);
 
 	}
 	
@@ -74,7 +74,7 @@ public class TimeSlot implements Comparable<TimeSlot>{
 	
 	public void setEndTime(LocalTime endTime) {
 		this.endTime = endTime;
-		System.out.println(endTime);
+		System.out.println("set endTime" + endTime);
 
 	}
 	
@@ -94,7 +94,7 @@ public class TimeSlot implements Comparable<TimeSlot>{
 	
 	public void setMaxPublishers(Short maxPublishers) {
 		this.maxPublishers = maxPublishers;
-		System.out.println(maxPublishers);
+		System.out.println("set maxPublishers" + maxPublishers);
 
 	}
 	
@@ -147,8 +147,17 @@ public class TimeSlot implements Comparable<TimeSlot>{
 	
 	@Override
 	public int compareTo(TimeSlot other) {
+		System.out.println("CALLED COMPARE ON TIMESLOT");
 		LocalTime otherStartTime = other.getStartTime();
 		LocalTime thisStartTime = this.getStartTime();
+		
+		
+		// all slots without a startTime will cluster at the end of the set
+		if(otherStartTime == null || thisStartTime == null) {
+			System.out.println("ST NULL " + 1);
+			
+			return 1;
+		}
 		
 		if(thisStartTime.isBefore(otherStartTime)) {
 			System.out.println("comapred: " + -1);

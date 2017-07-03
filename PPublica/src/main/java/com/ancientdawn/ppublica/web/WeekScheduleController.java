@@ -13,12 +13,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ancientdawn.ppublica.domain.Day;
+import com.ancientdawn.ppublica.domain.Publisher;
 import com.ancientdawn.ppublica.domain.WeekSchedule;
 import com.ancientdawn.ppublica.exception.InvalidRequestException;
 import com.ancientdawn.ppublica.exception.ResourceNotFoundException;
+import com.ancientdawn.ppublica.service.PublisherService;
 import com.ancientdawn.ppublica.service.WeekScheduleService;
 import com.ancientdawn.ppublica.validator.CreateWeekScheduleValidator;
 import com.ancientdawn.ppublica.validator.UpdateWeekScheduleValidator;
+import com.ancientdawn.ppublica.validator.authorization.UpdateWeekScheduleForPublisher;
+import com.ancientdawn.ppublica.validator.util.WeekPublisherAuth;
 
 @RestController
 @RequestMapping(value="/api/week")
@@ -26,9 +30,13 @@ public class WeekScheduleController {
 	
 	private WeekScheduleService weekScheduleService;
 	@Autowired
+	PublisherService publisherService;
+	@Autowired
 	private CreateWeekScheduleValidator createValidator;
 	@Autowired 
 	private UpdateWeekScheduleValidator updateValidator;
+	@Autowired
+	private UpdateWeekScheduleForPublisher pubAuthUpdateValidator;
 	
 	@Autowired
 	private MessageSource messageSource;
@@ -97,7 +105,7 @@ public class WeekScheduleController {
 	}
 	
 	@RequestMapping(value="/all", method = RequestMethod.GET, produces="application/json")
-	public ResponseEntity<Set<WeekSchedule>> getAllPublishers() {
+	public ResponseEntity<Set<WeekSchedule>> getAllSchedules() {
 
 		Set<WeekSchedule> weeks = weekScheduleService.getAllSchedules();
 		
@@ -116,44 +124,44 @@ public class WeekScheduleController {
 		return new ResponseEntity<WeekSchedule>(HttpStatus.ACCEPTED);
 		
 	}
+	
+	@RequestMapping(value="/{weekId}/{publisherId}", method = RequestMethod.GET, produces="application/json")
+	public ResponseEntity<WeekSchedule> getWeekForPublisher(@PathVariable("weekId") Long weekId, @PathVariable("publisherId") Long publisherId) {
+		
+		// does week exist?
+		WeekSchedule weekSchedule = weekScheduleService.readWeekSchedule(weekId);
+		if(weekSchedule == null) {
+			throw new ResourceNotFoundException(messageSource.getMessage("com.ancientdawn.ppublica.controller.WeekSchedule.Read.NotFound", null, null));
+		}
+		
+		// does publisher exist?
+		Publisher publisher = publisherService.readPublisher(publisherId);
+		
+		if(publisher == null) {
+			throw new ResourceNotFoundException(messageSource.getMessage("com.ancientdawn.ppublica.controller.WeekSchedule.Publisher.Read.NotFound", null, null));
+		}
+		
+		weekSchedule = weekScheduleService.getWeekForPublisher(weekId, publisherId);
+		
+		
+		
+		return new ResponseEntity<WeekSchedule>(weekSchedule, HttpStatus.ACCEPTED);
+
+	}
+	
+	@RequestMapping(value="/publisher/{publisherId}", method=RequestMethod.PUT, consumes="application/json")
+	public ResponseEntity<WeekSchedule> updatePublisherAssignmentsInAWeek(@PathVariable("publisherId") Long publisherId, @RequestBody WeekSchedule weekSchedule, BindingResult errors) {
+		
+		pubAuthUpdateValidator.validate(new WeekPublisherAuth(publisherId, weekSchedule), errors);
+		
+		if(errors.hasErrors()) {
+			System.out.println("UPDATE HAS ERRORS");
+			throw new InvalidRequestException("updateWeekSchedule", errors);
+			
+		}
+		
+		return new ResponseEntity<WeekSchedule>(weekSchedule, HttpStatus.OK);
+	}
+	
 }
 
-
-
-
-/*
- * // test JSON conversion of custom types
-		WeekSchedule testWeek = new WeekSchedule();
-		SortedSet<Day> testDaysss = new TreeSet<Day>();
-		Day day = new Day();
-		day.setWeekday(DayOfWeek.MONDAY);
-		day.setMinTime(LocalTime.of(8,0));
-		day.setMaxTime(LocalTime.of(20,0));
-		day.setDuration(Duration.ofMinutes(30));
-		SortedSet<TimeSlot> tsTest = new TreeSet<TimeSlot>();
-		TimeSlot ts1 = new TimeSlot();
-		ts1.setStartTime(LocalTime.of(9, 00));
-		ts1.setMaxPublishers((short)20);
-		tsTest.add(ts1);
-		day.setTimeSlots(tsTest);
-		testDaysss.add(day);
-		testWeek.setWeek(testDaysss);		
-		
-		System.out.println("-------");
-
-		System.out.println(testWeek);
-		
-		
-		
-		System.out.println("There are errors!!!!!!");
-			for(Object object : errors.getAllErrors()) {
-				if(object instanceof FieldError) {
-					FieldError fieldError = (FieldError) object;
-					
-					String message = messageSource.getMessage(fieldError, null);
-					System.out.println("Error message: " + message + "\n");
-				}
-								
-			}
-			System.out.println("Throwing InvalidRequestException");
- */

@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -24,13 +25,18 @@ import com.ancientdawn.ppublica.domain.Day;
 import com.ancientdawn.ppublica.domain.Publisher;
 import com.ancientdawn.ppublica.domain.WeekSchedule;
 import com.ancientdawn.ppublica.domain.repository.DayRepository;
+import com.ancientdawn.ppublica.domain.repository.PublisherRepository;
 import com.ancientdawn.ppublica.domain.repository.WeekScheduleRepository;
+import com.ancientdawn.ppublica.util.ModifiedAssignment;
+
+import static com.ancientdawn.ppublica.util.ModifiedAssignment.Request;
 
 @Repository
 public class WeekScheduleRepositoryJdbc implements WeekScheduleRepository {
 	
 	@Autowired
 	private DayRepository dayRepository;
+	@Autowired PublisherRepository publisherRepository;
 	@Autowired
 	private JdbcOperations jdbcOperations;
 	private static final String SQL_READ_WEEKSCHEDULE_ID = "SELECT * FROM weekSchedule WHERE id=?";
@@ -263,5 +269,42 @@ public class WeekScheduleRepositoryJdbc implements WeekScheduleRepository {
 		}
 
 	}
+
+	@Override
+	public List<ModifiedAssignment> updateAssignments(List<ModifiedAssignment> assignments) {
+		
+		ModifiedAssignment.Request action = null;
+		Long timeSlotId = null;
+		Long publisherId = null;
+		
+		for(ModifiedAssignment ma : assignments) {
+			action = ma.getRequestType();
+			
+			timeSlotId = ma.getId();
+			publisherId = ma.getPublisherId();
+			
+			if(action == Request.ADD) {
+				// are we creating a new TimeSlot ?
+				if(timeSlotId == null) {
+					publisherRepository.createAssignment(ma.getDayId(), ma.getStartTime(), publisherId);
+				}
+				// adding to a slot - UPDATE
+				else {
+					publisherRepository.createAssignment(timeSlotId, publisherId);
+				}
+				
+				continue;
+				
+			}
+			
+			if(action == Request.DELETE) {
+				publisherRepository.deleteAssignment(timeSlotId, publisherId);
+			}
+		}
+		
+		
+		return assignments;
+	}
+
 
 }

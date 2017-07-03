@@ -8,6 +8,7 @@ public interface DayRepository {
 	Day createDay(Day day);
 	Day updateDay(Day day);
 	Day readDay(Long dayId);
+	Day readDayProps(Long dayId);
 	void deleteDay(Long dayId);
 	Set<Day> getDaysInWeek(Long weekScheduleId);
 	Set<Day> getAllDays();

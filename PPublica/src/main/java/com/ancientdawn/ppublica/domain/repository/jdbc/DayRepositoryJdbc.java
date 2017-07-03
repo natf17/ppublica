@@ -34,6 +34,7 @@ public class DayRepositoryJdbc implements DayRepository {
 
 	@Autowired
 	private TimeSlotRepository timeSlotRepository;
+	
 	private JdbcOperations jdbcOperations;
 	private static final String SQL_READ_ALL_DAYS_WEEKSCHEDULE_ID = "SELECT * FROM day WHERE weekScheduleId=?";
 	private static final String SQL_READ_DAY_ID = "SELECT * FROM day WHERE id=?";
@@ -304,6 +305,15 @@ public class DayRepositoryJdbc implements DayRepository {
 		}
 		
 		return schedules;
+	}
+
+
+	@Override
+	public Day readDayProps(Long dayId) {
+		// build day object from day table
+		Day day = jdbcOperations.queryForObject(SQL_READ_DAY_ID, new DayRowMapper(), dayId);
+		
+		return day;
 	}
 
 
